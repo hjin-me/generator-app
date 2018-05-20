@@ -1,0 +1,11 @@
+version: "3"
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: ./ci/dev/Dockerfile
+    env_file: ./ci/env/pre.env
+    ports:
+      - "8443:8443"
+    extra_hosts:
+      - "dockerhost:${DOCKERHOST}"

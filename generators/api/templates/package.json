@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "api": "node ./webpack/api.js"
+  },
+  "devDependencies": {
+    "chokidar": "^2.0.3"
+  }
+}
