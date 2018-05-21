@@ -20,8 +20,14 @@
 [[projects]]
   name = "github.com/golang/protobuf"
   packages = ["proto"]
-  revision = "925541529c1fa6821df4e44ce2723319eb2be768"
-  version = "v1.0.0"
+  revision = "b4deda0973fb4c70b50d226b1af49f3da59f5265"
+  version = "v1.1.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/hjin-me/generator-app"
+  packages = ["gin-static"]
+  revision = "b5a24ff0f5ea7c785081cd82282242205801ad7b"
 
 [[projects]]
   name = "github.com/mattn/go-isatty"
@@ -39,7 +45,7 @@
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "bb9c189858d91f42db229b04d45a4c3d23a7662a"
+  revision = "c11f84a56e43e20a78cee75a7c034031ecf57d1f"
 
 [[projects]]
   name = "gopkg.in/go-playground/validator.v8"
@@ -56,6 +62,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "1a2b10f3ec80fa4b6ad88156b737403ca45820640ec668e0b797538b6274d305"
+  inputs-digest = "bc065b29db524bd1df018e03cde3b688a2fe45fba6057d75ce9f6d383fb77816"
   solver-name = "gps-cdcl"
   solver-version = 1

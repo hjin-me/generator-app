@@ -4,7 +4,7 @@ function handle_template () {
     for tmp in $(find $1 -name "*.tmpl")
     do
         file=${tmp:0:$((${#tmp}-5))}
-	echo $file ...replaced
+        echo $file ...replaced
         ttpl -i ${tmp} -o ${file};
     done
 }

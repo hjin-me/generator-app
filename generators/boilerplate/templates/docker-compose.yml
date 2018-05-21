@@ -4,8 +4,6 @@ services:
     build:
       context: ./
       dockerfile: ./ci/dev/Dockerfile
-    env_file: ./ci/env/pre.env
+    env_file: ./env/pre.env
     ports:
-      - "8443:8443"
-    extra_hosts:
-      - "dockerhost:${DOCKERHOST}"
+      - 8080:8080

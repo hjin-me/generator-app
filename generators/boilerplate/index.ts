@@ -41,7 +41,8 @@ module.exports = class extends Generator {
       "docker-compose.yml",
       "postcss.config.js",
       "tsconfig.json",
-      "tslint.json"
+      "tslint.json",
+      "default.env"
     ];
     overwriteFiles(toOverwrite, this);
   }

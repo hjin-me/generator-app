@@ -1,4 +1,3 @@
-"use strict";
 import * as Generator from "yeoman-generator";
 import * as mkdirp from "mkdirp";
 const chalk = require("chalk");
@@ -57,7 +56,7 @@ module.exports = class extends Generator {
     this.log(
       yosay(
         `Welcome to the bedazzling ${chalk.green(
-          "generator-insight"
+          "@hjin/generator-app"
         )} generator! 
         ${chalk.gray("v" + version)}`
       )

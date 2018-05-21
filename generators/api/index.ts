@@ -44,9 +44,28 @@ module.exports = class extends Generator {
     overwriteFiles(["webpack/api.js"], this);
     overwriteFilesWithTpl(["ci/release/Dockerfile"], this, this.props);
 
+    this._removeUseless();
     this._mergePackageJSON();
     this._mergeGoCode();
     this._mergeNginxConf();
+  }
+
+  _removeUseless() {
+    try {
+      this.fs.delete(this.destinationPath("docker-compose.yml"));
+    } catch {
+      // do nothing
+    }
+    try {
+      this.fs.delete(this.destinationPath("ci/default.conf.tmpl"));
+    } catch {
+      // do nothing
+    }
+    try {
+      this.fs.delete(this.destinationPath("ci/dev"));
+    } catch {
+      // do nothing
+    }
   }
 
   _mergeNginxConf() {

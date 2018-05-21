@@ -1,3 +1,6 @@
+* 删除 ci/dev
+* 删除 ci/default.conf.tmpl
+* 删除 docker-compose.yaml
 * package.json 增加 api 命令
 * package.json 增加 devDep 支持 api 命令 (chokidar)
 * webpack 目录增加 api.js

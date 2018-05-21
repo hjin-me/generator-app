@@ -12,6 +12,5 @@ RUN go build -v -o /go/bin/app ./api/app.go
 FROM hjin/app
 ENV PROJECT_NAME <%= projectName %>
 ENV GIN_MODE release
-COPY ci/default.conf.tmpl /etc/nginx/conf.d/default.conf.tmpl
-COPY --from=builder /project/dist/static /usr/share/nginx/html/static
+COPY --from=builder /project/dist /var/www
 COPY --from=goBuilder /go/bin/app /usr/local/bin/app

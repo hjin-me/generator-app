@@ -29,18 +29,18 @@ devServerConfig.plugins.push(
     debug: true
   }),
   new MiniCssExtractPlugin({
-    filename: "[name].[contenthash].css",
+    filename: "[name].bundle.css",
     chunkFilename: "[name].css"
   })
 );
 
-devServerConfig.output.publicPath = `https://dev.jinh.me:8443${path.posix.join(
+devServerConfig.output.publicPath = `${path.posix.join(
   "/static",
   NAMESPACE
 )}/`;
 
 devServerConfig.devServer = {
-  public: "dev.jinh.me:8443",
+  public: `127.0.0.1:${DEV_PORT}`,
   contentBase: path.join(__dirname, "..", "dist"),
   overlay: true,
   historyApiFallback: {

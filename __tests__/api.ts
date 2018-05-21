@@ -1,7 +1,7 @@
 import * as assert from "assert";
 import { insertBeforeLocation } from "../generators/api/utils";
 
-describe("generator-insight:api", () => {
+describe("generator-app:api", () => {
   it("merge nginx conf correct", () => {
     const before = `
 upstream cluster {

@@ -43,7 +43,7 @@ commonConfig.plugins.push(
   // Reference: https://github.com/ampedandwired/html-webpack-plugin
   // Render index.html
   new HtmlWebpackPlugin({
-    filename: "index.html.tmpl",
+    filename: "index.html",
     template: "./src/index.html",
     inject: "body",
     favicon: "./src/favicon.ico"

@@ -1,6 +1,9 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/hjin-me/generator-app/gin-static"
+)
 
 func main() {
 	r := gin.Default()
@@ -9,5 +12,7 @@ func main() {
 			"message": "pong",
 		})
 	})
+	r.SetHTMLTemplate(static.TemplateEngine())
+	static.ServerStatics(r)
 	r.Run(":8787") // listen and serve on 0.0.0.0:8787
 }

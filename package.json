@@ -1,19 +1,25 @@
 {
   "name": "@hjin/generator-app",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "WebApp Scaffold",
   "homepage": "",
   "author": {
     "name": "HJin_me",
     "email": "hjin.me@gmail.com",
-    "url": ""
+    "url": "https://huangj.in"
   },
-  "files": ["generators"],
+  "files": [
+    "generators"
+  ],
   "main": "generators/index.js",
-  "keywords": ["react", "yeoman-generator"],
+  "keywords": [
+    "react",
+    "yeoman-generator"
+  ],
   "devDependencies": {
     "@types/jest": "^22.2.3",
     "@types/mkdirp": "^0.5.2",
+    "@types/semver": "^5.5.0",
     "@types/yeoman-generator": "^2.0.3",
     "@types/yeoman-test": "^1.7.4",
     "@types/yosay": "^0.0.29",
@@ -44,11 +50,17 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "moduleFileExtensions": ["ts", "js", "json"],
+    "moduleFileExtensions": [
+      "ts",
+      "js",
+      "json"
+    ],
     "transform": {
       "^.+\\.(ts|tsx)$": "<rootDir>/preprocessor.js"
     },
-    "testMatch": ["**/__tests__/*.+(ts|js)"]
+    "testMatch": [
+      "**/__tests__/*.+(ts|js)"
+    ]
   },
   "scripts": {
     "build": "tsc --pretty",
@@ -59,17 +71,32 @@
     "test": "jest"
   },
   "lint-staged": {
-    "*.ts": ["prettier --write", "tslint --fix", "git add"],
-    "*.js": ["eslint --fix", "git add"],
-    "*.json": ["prettier --write", "git add"]
+    "*.ts": [
+      "prettier --write",
+      "tslint --fix",
+      "git add"
+    ],
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ],
+    "*.json": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "eslintConfig": {
-    "extends": ["xo", "prettier"],
+    "extends": [
+      "xo",
+      "prettier"
+    ],
     "env": {
       "jest": true,
       "node": true
     },
-    "plugins": ["prettier"]
+    "plugins": [
+      "prettier"
+    ]
   },
   "license": "MIT"
 }

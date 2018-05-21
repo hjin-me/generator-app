@@ -146,6 +146,10 @@
     "@types/rx-lite-time" "*"
     "@types/rx-lite-virtualtime" "*"
 
+"@types/semver@^5.5.0":
+  version "5.5.0"
+  resolved "http://registry.npm.taobao.org/@types/semver/download/@types/semver-5.5.0.tgz#146c2a29ee7d3bae4bf2fcb274636e264c813c45"
+
 "@types/through@*":
   version "0.0.29"
   resolved "http://registry.npm.taobao.org/@types/through/download/@types/through-0.0.29.tgz#72943aac922e179339c651fa34a4428a4d722f93"
