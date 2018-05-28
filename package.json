@@ -1,6 +1,6 @@
 {
   "name": "@hjin/generator-app",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "WebApp Scaffold",
   "homepage": "https://github.com/hjin-me/generator-app#readme",
   "author": "HJin_me <hjin.me@gmail.com> (https://huangj.in)",
@@ -9,8 +9,13 @@
   ],
   "main": "generators/index.js",
   "keywords": [
+    "yeoman-generator",
     "react",
-    "yeoman-generator"
+    "typescript",
+    "redux",
+    "rxjs",
+    "go",
+    "docker"
   ],
   "devDependencies": {
     "@types/jest": "^22.2.3",
@@ -19,13 +24,9 @@
     "@types/yeoman-generator": "^2.0.3",
     "@types/yeoman-test": "^1.7.4",
     "@types/yosay": "^0.0.29",
-    "eslint": "^4.1.0",
-    "eslint-config-prettier": "^2.4.0",
-    "eslint-config-xo": "^0.22.2",
-    "eslint-plugin-prettier": "^2.2.0",
     "fs-extra": "^6.0.1",
     "husky": "^0.14.3",
-    "jest": "^22.0.6",
+    "jest": "^23.0.1",
     "lint-staged": "^7.1.0",
     "nsp": "^3.2.1",
     "prettier": "^1.7.0",
@@ -72,26 +73,9 @@
       "tslint --fix",
       "git add"
     ],
-    "*.js": [
-      "eslint --fix",
-      "git add"
-    ],
     "*.json": [
       "prettier --write",
       "git add"
-    ]
-  },
-  "eslintConfig": {
-    "extends": [
-      "xo",
-      "prettier"
-    ],
-    "env": {
-      "jest": true,
-      "node": true
-    },
-    "plugins": [
-      "prettier"
     ]
   },
   "license": "MIT",

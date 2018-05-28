@@ -47,11 +47,12 @@ module.exports = class extends Generator {
   }
 
   _removeUseless() {
-    try {
-      this.fs.delete(this.destinationPath("docker-compose.yml"));
-    } catch {
-      // do nothing
-    }
+    // docker-compose.yml 里面的 env 文件暂时得保留
+    // try {
+    //   this.fs.delete(this.destinationPath("docker-compose.yml"));
+    // } catch {
+    //   // do nothing
+    // }
     try {
       this.fs.delete(this.destinationPath("ci/default.conf.tmpl"));
     } catch {
