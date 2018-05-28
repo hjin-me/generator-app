@@ -2,12 +2,8 @@
   "name": "@hjin/generator-app",
   "version": "1.0.0",
   "description": "WebApp Scaffold",
-  "homepage": "",
-  "author": {
-    "name": "HJin_me",
-    "email": "hjin.me@gmail.com",
-    "url": "https://huangj.in"
-  },
+  "homepage": "https://github.com/hjin-me/generator-app#readme",
+  "author": "HJin_me <hjin.me@gmail.com> (https://huangj.in)",
   "files": [
     "generators"
   ],
@@ -98,5 +94,12 @@
       "prettier"
     ]
   },
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hjin-me/generator-app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hjin-me/generator-app/issues"
+  }
 }

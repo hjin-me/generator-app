@@ -1,11 +1,7 @@
 import * as Generator from "yeoman-generator";
-import {
-  insertBeforeLocation,
-  overwriteFiles,
-  overwriteFilesWithTpl,
-  sortObject
-} from "./utils";
+import { overwriteFiles, overwriteFilesWithTpl, sortObject } from "./utils";
 import * as path from "path";
+
 const GitUrlParse = require("git-url-parse");
 const gitconfig = require("gitconfiglocal");
 
@@ -17,6 +13,7 @@ module.exports = class extends Generator {
   };
   // yeoman-generator tsd lost this method
   async: () => () => void;
+
   constructor(args, options) {
     super(args, options);
     if (options.git) {
@@ -47,7 +44,6 @@ module.exports = class extends Generator {
     this._removeUseless();
     this._mergePackageJSON();
     this._mergeGoCode();
-    this._mergeNginxConf();
   }
 
   _removeUseless() {
@@ -66,46 +62,6 @@ module.exports = class extends Generator {
     } catch {
       // do nothing
     }
-  }
-
-  _mergeNginxConf() {
-    (() => {
-      const releaseConf = this.fs.read(
-        this.destinationPath("ci/default.conf.tmpl")
-      );
-      if (releaseConf.match(/location\s+\/x\/\s*{/)) {
-        return;
-      }
-      this.fs.write(
-        this.destinationPath("ci/default.conf.tmpl"),
-        insertBeforeLocation(
-          releaseConf,
-          `location /x/ {
-                proxy_pass  http://127.0.0.1:8787;
-        }
-
-        `
-        )
-      );
-    })();
-
-    (() => {
-      const devConf = this.fs.read(this.destinationPath("ci/dev/app.conf"));
-      if (devConf.match(/location\s+\/x\/\s*{/)) {
-        return;
-      }
-      this.fs.write(
-        this.destinationPath("ci/dev/app.conf"),
-        insertBeforeLocation(
-          devConf,
-          `location /x/ {
-                proxy_pass  http://dockerhost:8787;
-        }
-
-        `
-        )
-      );
-    })();
   }
 
   _mergeGoCode() {
