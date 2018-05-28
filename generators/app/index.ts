@@ -35,6 +35,7 @@ module.exports = class extends Generator {
     if (this.fs.exists(this.destinationPath("package.json"))) {
       // 已有项目升级
       this.props.api = this.config.get("api");
+      this.props.dockerRepository = this.config.get("dockerRepository");
       this.props.boilerplate = false;
     } else {
       // 创建新项目
@@ -71,6 +72,12 @@ module.exports = class extends Generator {
         default: this.props.git
       }
     ];
+    prompts.push({
+      type: "input",
+      name: "dockerRepository",
+      message: "该项目的 docker repository 完整地址",
+      default: this.props.dockerRepository
+    });
     if (!this.props.api) {
       prompts.push({
         type: "confirm",
@@ -79,12 +86,6 @@ module.exports = class extends Generator {
         default: false
       });
     }
-    prompts.push({
-      type: "input",
-      name: "dockerRepository",
-      message: "该项目的 docker repository 完整地址",
-      default: ""
-    });
 
     return this.prompt(prompts).then(props => {
       const git: string = props.git;

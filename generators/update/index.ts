@@ -1,6 +1,7 @@
 import * as Generator from "yeoman-generator";
 const GitUrlParse = require("git-url-parse");
 const { version } = require("../../package.json");
+const gitconfig = require("gitconfiglocal");
 
 module.exports = class extends Generator {
   props: {
@@ -26,6 +27,15 @@ module.exports = class extends Generator {
     if (pkg && pkg["@hjin/app"]) {
       this.props.api = this.props.api || pkg["@hjin/app"].api;
     }
+    const done = this.async();
+    gitconfig(this.destinationPath(""), (err, config) => {
+      if (config && config.remote && config.remote.origin) {
+        this.props.git = config.remote.origin.url;
+        const gitParsed = GitUrlParse(config.remote.origin.url);
+        this.props.projectName = gitParsed.name;
+      }
+      done();
+    });
   }
   prompting() {
     const prompts: Generator.Questions = [];
