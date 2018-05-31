@@ -1,7 +1,9 @@
 import * as Generator from "yeoman-generator";
+import { checkLatest } from "../api/utils";
+
 const GitUrlParse = require("git-url-parse");
-const { version } = require("../../package.json");
 const gitconfig = require("gitconfiglocal");
+const { version } = require("../../package.json");
 
 module.exports = class extends Generator {
   props: {
@@ -19,7 +21,10 @@ module.exports = class extends Generator {
   };
   // yeoman-generator tsd lost this method
   async: () => () => void;
-  initializing() {
+
+  async initializing() {
+    const done = this.async();
+    await checkLatest(this.log);
     this.props.dockerRepository = this.config.get("dockerRepository");
     this.props.api = this.config.get("api");
     // <= 0.3.0
@@ -27,16 +32,20 @@ module.exports = class extends Generator {
     if (pkg && pkg["@hjin/app"]) {
       this.props.api = this.props.api || pkg["@hjin/app"].api;
     }
-    const done = this.async();
-    gitconfig(this.destinationPath(""), (err, config) => {
-      if (config && config.remote && config.remote.origin) {
-        this.props.git = config.remote.origin.url;
-        const gitParsed = GitUrlParse(config.remote.origin.url);
-        this.props.projectName = gitParsed.name;
-      }
-      done();
+
+    await new Promise(resolve => {
+      gitconfig(this.destinationPath(""), (err, config) => {
+        if (config && config.remote && config.remote.origin) {
+          this.props.git = config.remote.origin.url;
+          const gitParsed = GitUrlParse(config.remote.origin.url);
+          this.props.projectName = gitParsed.name;
+        }
+        resolve();
+      });
     });
+    done();
   }
+
   prompting() {
     const prompts: Generator.Questions = [];
     if (!this.props.git) {
@@ -116,6 +125,7 @@ module.exports = class extends Generator {
       yarn: true
     });
   }
+
   end() {
     this.log("Mission Complete. Thanks.");
   }

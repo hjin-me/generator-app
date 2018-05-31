@@ -1,10 +1,13 @@
 import * as Generator from "yeoman-generator";
 import * as mkdirp from "mkdirp";
+import { checkLatest } from "../api/utils";
+
 const chalk = require("chalk");
 const yosay = require("yosay");
 const path = require("path");
 const GitUrlParse = require("git-url-parse");
 const gitconfig = require("gitconfiglocal");
+const semver = require("semver");
 const { version } = require("../../package.json");
 
 module.exports = class extends Generator {
@@ -23,6 +26,7 @@ module.exports = class extends Generator {
   };
   // yeoman-generator tsd lost this method
   async: () => () => void;
+
   constructor(args, options) {
     super(args, options);
     this.option("boilerplate", {
@@ -31,27 +35,31 @@ module.exports = class extends Generator {
       default: true
     });
   }
-  initializing() {
-    if (this.fs.exists(this.destinationPath("package.json"))) {
+
+  async initializing() {
+    const done = this.async();
+    await checkLatest(this.log);
+    const v = this.config.get("version");
+    if (v && semver.gte(v, "1.0.0")) {
       // 已有项目升级
       this.props.api = this.config.get("api");
       this.props.dockerRepository = this.config.get("dockerRepository");
       this.props.boilerplate = false;
-    } else {
-      // 创建新项目
     }
 
     if (this.fs.exists(this.destinationPath(".git/config"))) {
-      const done = this.async();
-      gitconfig("./", (err, config) => {
-        if (config && config.remote && config.remote.origin) {
-          this.props.git = config.remote.origin.url;
-        }
-        this.props.boilerplate = false;
-        done();
+      await new Promise(resolve => {
+        gitconfig("./", (err, config) => {
+          if (config && config.remote && config.remote.origin) {
+            this.props.git = config.remote.origin.url;
+          }
+          resolve();
+        });
       });
     }
+    done();
   }
+
   prompting() {
     // Have Yeoman greet the user.
     this.log(
@@ -141,6 +149,7 @@ module.exports = class extends Generator {
       yarn: true
     });
   }
+
   end() {
     this.log("Thanks.");
   }
