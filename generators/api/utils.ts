@@ -2,8 +2,10 @@ import * as Generator from "yeoman-generator";
 import chalk from "chalk";
 import yosay = require("yosay");
 
-const npmCheck = require("npm-check");
-const { name, version } = require("../../package.json");
+const pkg = require("../../package.json");
+
+const updateNotifier = require("update-notifier");
+const stringLength = require("string-length");
 
 export function insertBeforeLocation(data: string, insert: string): string {
   const cursor = data.indexOf("location");
@@ -56,25 +58,23 @@ export function sortObject(object) {
   return sortedObject;
 }
 
-function getLatestVersion() {
-  return npmCheck({ global: true }).then(
-    state => state.get("packages").filter(p => p.moduleName === name)[0].latest
-  );
-}
+export function updateCheck() {
+  const notifier = updateNotifier({
+    pkg
+  });
+  const message = [];
 
-export async function checkLatest(log) {
-  const latest = await getLatestVersion();
-  if (version !== latest) {
-    log(
-      yosay(
-        `installed version is ${chalk.yellow(
-          version
-        )}, but the latest version is ${chalk.green(latest)}
-        please use \`${chalk.green(
-          `npm i -g @hjin/generator-app`
-        )}\` to update!`,
-        { maxLength: 100 }
-      )
+  if (notifier.update) {
+    message.push(
+      "Update available: " +
+        chalk.green.bold(notifier.update.latest) +
+        chalk.gray(" (current: " + notifier.update.current + ")")
+    );
+    message.push(
+      "Run " + chalk.magenta("npm install -g " + pkg.name) + " to update."
+    );
+    console.log(
+      yosay(message.join(" "), { maxLength: stringLength(message[0]) })
     );
   }
 }

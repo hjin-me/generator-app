@@ -1,6 +1,6 @@
 import * as Generator from "yeoman-generator";
 import * as mkdirp from "mkdirp";
-import { checkLatest } from "../api/utils";
+import { updateCheck } from "../api/utils";
 
 const chalk = require("chalk");
 const yosay = require("yosay");
@@ -38,7 +38,7 @@ module.exports = class extends Generator {
 
   async initializing() {
     const done = this.async();
-    await checkLatest(this.log);
+    updateCheck();
     const v = this.config.get("version");
     if (v && semver.gte(v, "1.0.0")) {
       // 已有项目升级

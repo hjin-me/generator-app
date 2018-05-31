@@ -1,6 +1,6 @@
 {
   "name": "@hjin/generator-app",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "WebApp Scaffold",
   "homepage": "https://github.com/hjin-me/generator-app#readme",
   "author": "HJin_me <hjin.me@gmail.com> (https://huangj.in)",
@@ -41,8 +41,9 @@
     "git-url-parse": "^9.0.0",
     "gitconfiglocal": "^2.0.1",
     "mkdirp": "^0.5.1",
-    "npm-check": "^5.7.1",
     "semver": "^5.5.0",
+    "string-length": "^2.0.0",
+    "update-notifier": "^2.5.0",
     "yeoman-generator": "^2.0.5",
     "yosay": "^2.0.1"
   },

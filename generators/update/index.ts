@@ -1,5 +1,5 @@
 import * as Generator from "yeoman-generator";
-import { checkLatest } from "../api/utils";
+import { updateCheck } from "../api/utils";
 
 const GitUrlParse = require("git-url-parse");
 const gitconfig = require("gitconfiglocal");
@@ -24,7 +24,7 @@ module.exports = class extends Generator {
 
   async initializing() {
     const done = this.async();
-    await checkLatest(this.log);
+    updateCheck();
     this.props.dockerRepository = this.config.get("dockerRepository");
     this.props.api = this.config.get("api");
     // <= 0.3.0
