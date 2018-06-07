@@ -1,0 +1,17 @@
+{
+  "schema": {
+    "file": "./src/schema.graphqls"
+  },
+
+  "endpoints": [
+    {
+      "name": "Default",
+      "url": "https://dev.jinh.me:8443/graphql",
+      "options": {
+        "headers": {
+          "user-agent": "JS GraphQL"
+        }
+      }
+    }
+  ]
+}

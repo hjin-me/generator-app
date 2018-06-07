@@ -6,8 +6,7 @@
     "build": "webpack --config webpack/production.config.js",
     "postinstall": "fuck-anticon",
     "precommit": "lint-staged",
-    "server":
-      "webpack-dev-server --config webpack/development.config.js --inline --progress",
+    "server": "webpack-dev-server --config webpack/development.config.js --inline --progress",
     "start": "yarn run server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -60,6 +59,7 @@
     "optimize-css-assets-webpack-plugin": "^4.0.0",
     "postcss-loader": "^2.0.8",
     "prettier": "^1.12.1",
+    "raw-loader": "^0.5.1",
     "redux-logger": "^3.0.0",
     "rxjs-compat": "^6.0.0",
     "sass-loader": "^7.0.1",
@@ -79,8 +79,19 @@
     "yaml-loader": "^0.5.0"
   },
   "lint-staged": {
-    "src/**/*.{ts,tsx}": ["prettier --write", "tslint --fix", "git add"],
-    "*.scss": ["prettier --write", "stylelint  --syntax scss --fix", "git add"],
-    "*.json": ["prettier --write", "git add"]
+    "src/**/*.{ts,tsx}": [
+      "prettier --write",
+      "tslint --fix",
+      "git add"
+    ],
+    "*.scss": [
+      "prettier --write",
+      "stylelint  --syntax scss --fix",
+      "git add"
+    ],
+    "*.json": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }

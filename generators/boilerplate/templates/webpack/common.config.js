@@ -128,8 +128,12 @@ module.exports = function makeWebpackConfig() {
         use: [{ loader: "file-loader" }]
       },
       {
-        test: /\.yaml/,
+        test: /\.ya?ml$/,
         use: [{ loader: "json-loader" }, { loader: "yaml-loader" }]
+      },
+      {
+        test: /\.graphql.?$/,
+        use: ["raw-loader"]
       },
       {
         test: /\.html/,

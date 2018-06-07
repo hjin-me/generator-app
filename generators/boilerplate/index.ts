@@ -42,7 +42,8 @@ module.exports = class extends Generator {
       "postcss.config.js",
       "tsconfig.json",
       "tslint.json",
-      "default.env"
+      "default.env",
+      "graphql.config.json"
     ];
     overwriteFiles(toOverwrite, this);
   }

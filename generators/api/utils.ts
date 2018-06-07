@@ -1,11 +1,8 @@
 import * as Generator from "yeoman-generator";
-import chalk from "chalk";
-import yosay = require("yosay");
 
 const pkg = require("../../package.json");
 
 const updateNotifier = require("update-notifier");
-const stringLength = require("string-length");
 
 export function insertBeforeLocation(data: string, insert: string): string {
   const cursor = data.indexOf("location");
@@ -60,21 +57,11 @@ export function sortObject(object) {
 
 export function updateCheck() {
   const notifier = updateNotifier({
-    pkg
+    pkg,
+    updateCheckInterval: 1000 * 60 * 60 * 24
   });
-  const message = [];
-
-  if (notifier.update) {
-    message.push(
-      "Update available: " +
-        chalk.green.bold(notifier.update.latest) +
-        chalk.gray(" (current: " + notifier.update.current + ")")
-    );
-    message.push(
-      "Run " + chalk.magenta("npm install -g " + pkg.name) + " to update."
-    );
-    console.log(
-      yosay(message.join(" "), { maxLength: stringLength(message[0]) })
-    );
-  }
+  // Notify using the built-in convenience method
+  notifier.notify({
+    isGlobal: true
+  });
 }
