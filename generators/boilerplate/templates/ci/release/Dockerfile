@@ -9,7 +9,8 @@ WORKDIR "/go/src/<%= gitRepository %>"
 COPY ./api ./api
 RUN go build -v -o /go/bin/app ./api/app.go
 
-FROM harbor.inf.avlyun.org/inf/fe-alpine
+# TODO
+FROM fe-alpine
 ENV PROJECT_NAME <%= projectName %>
 ENV GIN_MODE release
 COPY --from=builder /project/dist/static /var/www/static
