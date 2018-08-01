@@ -4,7 +4,7 @@ const devServerConfig = require("./common.config.js")();
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-const { DEV_PORT, NAMESPACE, allEnv } = require("./env");
+const { envDefine, env } = require("./env");
 
 devServerConfig.mode = "development";
 devServerConfig.cache = true;
@@ -22,7 +22,7 @@ devServerConfig.plugins.push(
 
   // Reference: https://github.com/webpack/docs/wiki/list-of-plugins#defineplugin
   new webpack.DefinePlugin({
-    ...allEnv,
+    ...envDefine(),
     DEBUG: true
   }),
   new webpack.LoaderOptionsPlugin({
@@ -34,17 +34,17 @@ devServerConfig.plugins.push(
   })
 );
 
-devServerConfig.output.publicPath = `${path.posix.join(
+devServerConfig.output.publicPath = `https://dev.jinh.me:8443${path.posix.join(
   "/static",
-  NAMESPACE
+  env("PROJECT_NAME")
 )}/`;
 
 devServerConfig.devServer = {
-  public: `127.0.0.1:${DEV_PORT}`,
+  public: "dev.jinh.me:8443",
   contentBase: path.join(__dirname, "..", "dist"),
   overlay: true,
   historyApiFallback: {
-    index: path.posix.join("/static", NAMESPACE, "index.html")
+    index: path.posix.join("/static", env("PROJECT_NAME"), "index.html")
   },
   headers: {
     "Access-Control-Allow-Origin": "*",
@@ -60,7 +60,7 @@ devServerConfig.devServer = {
   },
   host: "0.0.0.0",
   disableHostCheck: true,
-  port: DEV_PORT
+  port: 8765
 };
 
 module.exports = devServerConfig;

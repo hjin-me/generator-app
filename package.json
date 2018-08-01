@@ -1,6 +1,6 @@
 {
   "name": "@hjin/generator-app",
-  "version": "1.0.6",
+  "version": "2.0.0",
   "description": "WebApp Scaffold",
   "homepage": "https://github.com/hjin-me/generator-app#readme",
   "author": "HJin_me <hjin.me@gmail.com> (https://huangj.in)",
@@ -58,6 +58,10 @@
     },
     "testMatch": [
       "**/__tests__/*.+(ts|js)"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/generators/"
     ]
   },
   "scripts": {
@@ -66,7 +70,8 @@
     "pretest": "lint-staged",
     "prepublish": "nsp check && yarn build",
     "precommit": "lint-staged",
-    "test": "jest"
+    "test": "jest",
+    "sync": "yarn run build && node ./tools/sync-update.js"
   },
   "lint-staged": {
     "*.ts": [

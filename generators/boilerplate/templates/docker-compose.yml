@@ -1,9 +1,7 @@
 version: "3"
 services:
-  app:
-    build:
-      context: ./
-      dockerfile: ./ci/dev/Dockerfile
+  dev:
+    image: harbor.inf.avlyun.org/inf/fe:2.0.0
     env_file: ./env/pre.env
     ports:
-      - 8080:8080
+      - "8443:8443"

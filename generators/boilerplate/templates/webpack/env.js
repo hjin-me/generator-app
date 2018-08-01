@@ -5,82 +5,71 @@
 let ENV = process.env.npm_lifecycle_event;
 const isTest = ENV === "test";
 const isProd = ENV === "build" || ENV === "release";
-const STATIC_PREFIX = process.env.STATIC_PREFIX
-  ? process.env.STATIC_PREFIX
-  : "";
-const NAMESPACE = process.env.PROJECT_NAME || "";
-const DEV_PORT = "8765";
-// const UGLIFYJS = process.env.UGLIFYJS === true || ('' + process.env.UGLIFYJS).toLowerCase() === 'true';
-
-const MODULES_DIR = process.env.NODE_DOCKER_MODULES
-  ? [__dirname, process.env.NODE_DOCKER_MODULES]
-  : [__dirname, "node_modules"];
 
 const fs = require("fs");
 const path = require("path");
 const yaml = require("js-yaml");
 
-(function() {
+const cr = /[A-Z]/g;
+
+function c2s(str) {
+  return str.replace(cr, ($0 = "") => {
+    return "_" + $0.toLowerCase();
+  });
+}
+
+function envUpdate() {
+  // yo-rc
+  const yoRc = require("../.yo-rc.json");
+  for (const [key, value] of Object.entries(Object.values(yoRc)[0])) {
+    // 项目常量，可以输出到项目源码
+    process.env["YO_" + c2s(key).toUpperCase()] = value;
+  }
+
   if (isProd) {
     return;
   }
-
-  // Get document, or throw exception on error
+  // 环境变量仅用于 Go API，Webpack 编译 和 Docker 启动使用。不得在 JS 内使用，故线上环境禁用。
+  // 如果需要环境变量注入代码。请参考 passport 使用，利用 docker 修改 index.html 文件，由 JS 运行时动态获取。
   let envFile;
-  try {
-    const doc = yaml.safeLoad(
-      fs.readFileSync(path.join(__dirname, "../docker-compose.yml"), "utf8")
-    );
-    envFile = path.join(__dirname, "..", doc.services.app.env_file);
-  } catch (e) {
-    console.error(e);
+  // Get document, or throw exception on error
+  const dcFile = path.join(__dirname, "../docker-compose.yml");
+  if (fs.existsSync(dcFile)) {
+    try {
+      const doc = yaml.safeLoad(
+        fs.readFileSync(path.join(__dirname, "../docker-compose.yml"), "utf8")
+      );
+      envFile = path.join(__dirname, "..", doc.services.dev.env_file);
+    } catch (e) {}
   }
-
-  let content;
-
-  try {
-    content = fs.readFileSync(envFile).toString();
-  } catch (e) {}
-
-  if (!content) {
-    return;
+  if (!envFile) {
+    if (fs.existsSync(path.join(__dirname, "../default.env"))) {
+      envFile = path.join(__dirname, "../default.env");
+    }
   }
+  if (envFile) {
+    require("dotenv").config({ path: envFile });
+  }
+}
 
-  content.split("\n").forEach(declaration => {
-    declaration = declaration.trim();
-    if (!declaration) {
-      return;
-    }
+envUpdate();
+function env(key) {
+  return process.env[key] || "";
+}
 
-    if (declaration.length > 1 && declaration.indexOf("=") === -1) {
-      console.error("invalid declaration:", declaration);
-      return;
-    }
-
-    const [key, value] = declaration.split("=");
-
-    process.env[key.trim()] = value.trim();
-  });
-})();
-
-const allEnv = Object.keys(process.env).reduce(
-  (previousValue, currentValue) => {
+function envDefine() {
+  return Object.keys(process.env).reduce((previousValue, currentValue) => {
     previousValue[`process.env.${currentValue}`] = JSON.stringify(
       process.env[currentValue]
     );
     return previousValue;
-  },
-  {}
-);
+  }, {});
+}
 
 module.exports = {
-  ENV,
+  env,
+  envUpdate,
+  envDefine,
   isTest,
-  isProd,
-  STATIC_PREFIX,
-  NAMESPACE,
-  DEV_PORT,
-  MODULES_DIR,
-  //, UGLIFYJS
-  allEnv
+  isProd
 };

@@ -1,5 +1,5 @@
 import * as Generator from "yeoman-generator";
-import { updateCheck } from "../api/utils";
+import { parseGitRepository, updateCheck } from "../utils";
 
 const GitUrlParse = require("git-url-parse");
 const gitconfig = require("gitconfiglocal");
@@ -10,13 +10,11 @@ module.exports = class extends Generator {
     git: string;
     projectName: string;
     dockerRepository: string;
-    api: boolean | string | undefined;
     boilerplate: boolean;
   } = {
     git: "",
     projectName: "",
     dockerRepository: "",
-    api: false,
     boilerplate: false
   };
   // yeoman-generator tsd lost this method
@@ -26,19 +24,14 @@ module.exports = class extends Generator {
     const done = this.async();
     updateCheck();
     this.props.dockerRepository = this.config.get("dockerRepository");
-    this.props.api = this.config.get("api");
-    // <= 0.3.0
-    const pkg = this.fs.readJSON(this.destinationPath("./package.json"));
-    if (pkg && pkg["@hjin/app"]) {
-      this.props.api = this.props.api || pkg["@hjin/app"].api;
-    }
+    this.props.projectName = this.config.get("appName");
 
     await new Promise(resolve => {
       gitconfig(this.destinationPath(""), (err, config) => {
         if (config && config.remote && config.remote.origin) {
           this.props.git = config.remote.origin.url;
           const gitParsed = GitUrlParse(config.remote.origin.url);
-          this.props.projectName = gitParsed.name;
+          this.props.projectName = this.props.projectName || gitParsed.name;
         }
         resolve();
       });
@@ -54,14 +47,6 @@ module.exports = class extends Generator {
         name: "git",
         message: "项目仓库地址",
         default: this.props.git
-      });
-    }
-    if (typeof this.props.api !== "boolean") {
-      prompts.push({
-        type: "confirm",
-        name: "api",
-        message: "是否使用 Golang 做 API 接口？",
-        default: false
       });
     }
 
@@ -80,14 +65,9 @@ module.exports = class extends Generator {
       }
       if (!this.props.git) {
         const git: string = props.git;
-        const gitParsed = GitUrlParse(git);
-        const projectName = gitParsed.name;
+        const { name } = parseGitRepository(git);
         this.props.git = git;
-        this.props.projectName = projectName;
-      }
-      if (typeof this.props.api !== "boolean") {
-        const api: boolean = props.api;
-        this.props.api = this.props.api || api;
+        this.props.projectName = name;
       }
       if (!this.props.dockerRepository) {
         this.props.dockerRepository = props.dockerRepository;
@@ -97,9 +77,9 @@ module.exports = class extends Generator {
 
   default() {
     // after destination root, set config
+    this.config.set("appName", this.props.projectName);
     this.config.set("version", version);
     this.config.set("dockerRepository", this.props.dockerRepository);
-    this.config.set("api", this.props.api);
     this.config.save();
     this.composeWith(require.resolve("../migration"), {
       ...this.props
@@ -111,11 +91,6 @@ module.exports = class extends Generator {
     this.composeWith(require.resolve("../tests"), {
       ...this.props
     });
-    if (this.props.api) {
-      this.composeWith(require.resolve("../api"), {
-        ...this.props
-      });
-    }
   }
 
   install() {

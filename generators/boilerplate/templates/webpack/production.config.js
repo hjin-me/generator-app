@@ -6,6 +6,7 @@ const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 let commonConfig = require("./common.config.js")();
 
 commonConfig.optimization = {
+  ...commonConfig.optimization,
   minimizer: [
     // Reference: http://webpack.github.io/docs/list-of-plugins.html#uglifyjsplugin
     // Minify all javascript, switch loaders to minimizing mode
@@ -31,9 +32,9 @@ commonConfig.optimization = {
   ]
 };
 
-const { STATIC_PREFIX, allEnv } = require("./env");
+const { env, envDefine } = require("./env");
 // 静态资源前缀不加 /，因为原本就是绝对路径
-const staticPrefix = STATIC_PREFIX ? STATIC_PREFIX : "";
+const staticPrefix = env("STATIC_PREFIX");
 
 commonConfig.mode = "production";
 // Absolute output directory
@@ -50,7 +51,7 @@ commonConfig.plugins.push(
   }),
   // Reference: https://github.com/webpack/docs/wiki/list-of-plugins#defineplugin
   new webpack.DefinePlugin({
-    ...allEnv,
+    ...envDefine(),
     DEBUG: false
   }),
 

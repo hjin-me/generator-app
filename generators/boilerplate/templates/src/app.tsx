@@ -1,27 +1,16 @@
-import React from "react";
-import Button from "antd/lib/button";
-const query = require("./foo.graphql");
+import * as React from "react";
+import { Provider } from "react-redux";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import { theme, ThemeProvider } from "./theme";
+import { Demo } from "./page/demo";
+import store from "./store";
 
-const style = require("./app.scss");
-
-export class App extends React.Component<{}, { slogan: string }> {
-  state = {
-    slogan: "Hail Hydra"
-  };
-
-  showSecret = () => {
-    console.log(query);
-    this.setState({
-      slogan: "Hale Hydra"
-    });
-  };
-
-  render() {
-    return (
-      <div>
-        <h1 className={style.h1}>{this.state.slogan}</h1>
-        <Button onClick={this.showSecret}>secret</Button>
-      </div>
-    );
-  }
-}
+export const App = () => (
+  <ThemeProvider theme={theme}>
+    <Provider store={store}>
+      <Router>
+        <Route path="/" component={Demo} />
+      </Router>
+    </Provider>
+  </ThemeProvider>
+);

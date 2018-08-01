@@ -1,9 +1,0 @@
-{
-  "@hjin/generator-app": {
-    "promptValues": {
-      "authorName": "HJin_me",
-      "authorEmail": "hjin.me@gmail.com",
-      "authorUrl": ""
-    }
-  }
-}

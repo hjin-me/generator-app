@@ -1,5 +1,8 @@
 import * as Generator from "yeoman-generator";
+import { valid } from "semver";
+import { satisfies } from "semver";
 import { updateEnvFile } from "./before_1.0.0";
+import { migration } from "./before_2.0.0";
 import * as mkdirp from "mkdirp";
 
 module.exports = class extends Generator {
@@ -35,7 +38,23 @@ module.exports = class extends Generator {
     });
   }
   writing() {
-    this._before1_0_0();
+    const v = this.config.get("version");
+    if (satisfies(v, "<1.0.0")) {
+      this._before1_0_0();
+    }
+    if (satisfies(v, "<2.0.0")) {
+      this._before_2_0_0();
+    }
+  }
+
+  /**
+   *
+   * @private
+   *
+   * remove ./ci/dev
+   */
+  _before_2_0_0() {
+    migration(this);
   }
 
   /**

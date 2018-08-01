@@ -1,5 +1,5 @@
 const webpack = require("webpack");
-const { allEnv } = require("./webpack/env");
+const { envDefine } = require("./webpack/env");
 module.exports = function(config) {
   config.set({
     browsers: ["Chrome"],
@@ -86,15 +86,19 @@ module.exports = function(config) {
             use: ["null-loader"]
           },
           {
-            test: /\.yaml/,
+            test: /\.ya?ml$/,
             use: [{ loader: "json-loader" }, { loader: "yaml-loader" }]
+          },
+          {
+            test: /\.graphql.?$/,
+            use: ["raw-loader"]
           }
         ]
       },
       plugins: [
         // Reference: https://github.com/webpack/docs/wiki/list-of-plugins#defineplugin
         new webpack.DefinePlugin({
-          ...allEnv,
+          ...envDefine(),
           DEBUG: false
         })
       ]

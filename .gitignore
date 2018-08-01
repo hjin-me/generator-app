@@ -1,4 +1,6 @@
 generators/*/*.js
+generators/*.js
+tools/*.js
 __tests__/*.js
 .vscode
 coverage/

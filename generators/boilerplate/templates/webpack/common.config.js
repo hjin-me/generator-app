@@ -1,7 +1,8 @@
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
+const webpack = require("webpack");
 
-const { isProd, NAMESPACE, MODULES_DIR } = require("./env");
+const { isProd, env } = require("./env");
 
 module.exports = function makeWebpackConfig() {
   /**
@@ -15,7 +16,6 @@ module.exports = function makeWebpackConfig() {
    * Resolve Path
    */
   config.resolve = {
-    modules: MODULES_DIR,
     extensions: [".js", ".jsx", ".ts", ".tsx", ".json"]
   };
 
@@ -37,11 +37,11 @@ module.exports = function makeWebpackConfig() {
    */
   config.output = {
     // Absolute output directory
-    path: path.join(__dirname, "/../dist/static", NAMESPACE),
+    path: path.join(__dirname, "/../dist/static", env("PROJECT_NAME")),
 
     // Output path from the view of the page
     // Uses webpack-dev-server in development
-    publicPath: path.posix.join("/static", NAMESPACE) + "/",
+    publicPath: path.posix.join("/static", env("PROJECT_NAME")) + "/",
 
     // Filename for entry points
     // Only adds hash in build mode
@@ -154,14 +154,19 @@ module.exports = function makeWebpackConfig() {
    * Reference: http://webpack.github.io/docs/configuration.html#plugins
    * List: http://webpack.github.io/docs/list-of-plugins.html
    */
-  config.plugins = [];
+  config.plugins = [new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)];
 
   config.optimization = {
     // minimize: true,
-    // splitChunks: {
-    //   chunks: 'all',
-    //   name: 'vendor'
-    // },
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "vendors",
+          chunks: "all"
+        }
+      }
+    }
     // runtimeChunk: true
   };
   return config;

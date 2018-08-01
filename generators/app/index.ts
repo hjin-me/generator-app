@@ -1,6 +1,6 @@
 import * as Generator from "yeoman-generator";
 import * as mkdirp from "mkdirp";
-import { updateCheck } from "../api/utils";
+import { updateCheck } from "../utils";
 
 const chalk = require("chalk");
 const yosay = require("yosay");
@@ -14,13 +14,11 @@ module.exports = class extends Generator {
   props: {
     git: string;
     projectName: string;
-    api: boolean;
     boilerplate: boolean;
     dockerRepository: string;
   } = {
     git: "",
     projectName: "",
-    api: false,
     boilerplate: true,
     dockerRepository: ""
   };
@@ -42,8 +40,8 @@ module.exports = class extends Generator {
     const v = this.config.get("version");
     if (v && semver.gte(v, "1.0.0")) {
       // 已有项目升级
-      this.props.api = this.config.get("api");
       this.props.dockerRepository = this.config.get("dockerRepository");
+      this.props.projectName = this.config.get("appName");
       this.props.boilerplate = false;
     }
 
@@ -72,37 +70,29 @@ module.exports = class extends Generator {
     );
     this.fs.readJSON(this.destinationPath());
 
-    const prompts: Generator.Questions = [
+    const prompts: Generator.Question[] = [
       {
         type: "input",
         name: "git",
         message: "项目仓库地址",
-        default: this.props.git
+        default: this.props.git,
+        validate: input => (!input ? "git repository shouldn't be null!" : true)
       }
     ];
     prompts.push({
       type: "input",
       name: "dockerRepository",
       message: "该项目的 docker repository 完整地址",
-      default: this.props.dockerRepository
+      default: this.props.dockerRepository,
+      validate: input =>
+        !input ? "docker repository shouldn't be null!" : true
     });
-    if (!this.props.api) {
-      prompts.push({
-        type: "confirm",
-        name: "api",
-        message: "是否使用 Golang 做 API 接口？",
-        default: false
-      });
-    }
 
     return this.prompt(prompts).then(props => {
-      const git: string = props.git;
-      const gitParsed = GitUrlParse(git);
-      const api: boolean = props.api;
-      const projectName = gitParsed.name;
+      const { git, passport } = props;
+      const { name: projectName } = GitUrlParse(git);
       this.props.git = git;
-      this.props.api = this.props.api || api;
-      this.props.projectName = projectName;
+      this.props.projectName = this.props.projectName || projectName;
       this.props.dockerRepository = props.dockerRepository;
     });
   }
@@ -121,9 +111,9 @@ module.exports = class extends Generator {
       this.destinationRoot(this.destinationPath(this.props.projectName));
     }
     // after destination root, set config
+    this.config.set("appName", this.props.projectName);
     this.config.set("version", version);
     this.config.set("dockerRepository", this.props.dockerRepository);
-    this.config.set("api", this.props.api);
     this.config.save();
 
     this.composeWith(require.resolve("../boilerplate"), {
@@ -134,12 +124,6 @@ module.exports = class extends Generator {
       ...this.options,
       ...this.props
     });
-    if (this.props.api) {
-      this.composeWith(require.resolve("../api"), {
-        ...this.options,
-        ...this.props
-      });
-    }
   }
 
   install() {

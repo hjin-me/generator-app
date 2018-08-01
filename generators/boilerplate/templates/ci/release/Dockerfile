@@ -4,7 +4,15 @@ WORKDIR /project
 COPY . /project/
 RUN yarn install && yarn build
 
-FROM hjin/app-nginx
+FROM golang:alpine as goBuilder
+WORKDIR "/go/src/<%= gitRepository %>"
+COPY ./api ./api
+RUN go build -v -o /go/bin/app ./api/app.go
+
+FROM harbor.inf.avlyun.org/inf/fe-alpine
 ENV PROJECT_NAME <%= projectName %>
-COPY ci/default.conf.tmpl /etc/nginx/conf.d/default.conf.tmpl
-COPY --from=builder /project/dist/static /usr/share/nginx/html/static
+ENV GIN_MODE release
+COPY --from=builder /project/dist/static /var/www/static
+COPY --from=goBuilder /go/bin/app /usr/local/bin/app
+EXPOSE 8080
+CMD app

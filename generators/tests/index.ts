@@ -1,5 +1,5 @@
 import * as Generator from "yeoman-generator";
-import { overwriteFiles, sortObject } from "../api/utils";
+import { overwriteFiles, sortObject } from "../utils";
 
 module.exports = class extends Generator {
   options: {

@@ -1,9 +1,11 @@
 import * as Generator from "yeoman-generator";
 import {
+  mergePackageJSON,
   overwriteFiles,
   overwriteFilesWithTpl,
-  sortObject
-} from "../api/utils";
+  parseGitRepository
+} from "../utils";
+
 const { version } = require("../../package.json");
 
 interface Options {
@@ -12,8 +14,13 @@ interface Options {
   dockerRepository: string;
   boilerplate: boolean;
 }
+
 module.exports = class extends Generator {
   options: Options;
+  props = {
+    gitRepository: ""
+  };
+
   constructor(args: string | string[], options: Options) {
     super(args, options);
     this.option("boilerplate", {
@@ -31,13 +38,26 @@ module.exports = class extends Generator {
       description: "docker repository"
     });
   }
+
+  initializing() {
+    if (!this.options.git) {
+      throw new Error("generator missing params [git]");
+    }
+    if (!this.options.projectName) {
+      throw new Error("generator missing params [projectName]");
+    }
+    this._parseGitRepository(this.options.git);
+    return;
+  }
+
   configuring() {
     const toOverwrite = [
-      ".dockerignore",
-      ".editorconfig",
-      [".gitignore.tpl", ".gitignore"],
-      [".npmrc.tpl", ".npmrc"],
-      ".stylelintrc",
+      ["_dockerignore", ".dockerignore"],
+      ["_editorconfig", ".editorconfig"],
+      ["_npmignore", ".npmignore"],
+      ["_gitignore", ".gitignore"],
+      ["_npmrc", ".npmrc"],
+      ["_stylelintrc", ".stylelintrc"],
       "docker-compose.yml",
       "postcss.config.js",
       "tsconfig.json",
@@ -58,44 +78,29 @@ module.exports = class extends Generator {
     } else {
       this._mergePackageJSON();
     }
+    this._mergeGoCode();
     overwriteFiles(toCopy, this);
     overwriteFilesWithTpl(toCopyTpl, this, {
       projectName: this.options.projectName,
       dockerRepository: this.options.dockerRepository,
-      version
+      version,
+      ...this.props
     });
   }
-  _mergeEnv() {
-    /*
-     * TODO
-     * should check env files contain
-     * `
-     *  DOCKER_REPOSITORY=<%= dockerRepository %>
-     * `
-     */
-    // TODO
-    // check env contain
+
+  _mergeGoCode() {
+    if (!this.fs.exists(this.destinationPath("./api/app.go"))) {
+      this.fs.copy(this.templatePath("api/**"), this.destinationPath("api"));
+    }
   }
+
   _mergePackageJSON() {
     const dep = ["devDependencies", "scripts", "dependencies", "lint-staged"];
-    const raw = this.fs.readJSON(this.templatePath("package.json"));
-    const targetPath = this.destinationPath("package.json");
-    const target = this.fs.readJSON(targetPath);
+    mergePackageJSON(dep, this);
+  }
 
-    target.scripts = { ...target.scripts, ...raw.scripts };
-    target.devDependencies = {
-      ...target.devDependencies,
-      ...raw.devDependencies
-    };
-    target.dependencies = { ...target.dependencies, ...raw.dependencies };
-    target["lint-staged"] = { ...target["lint-staged"], ...raw["lint-staged"] };
-    // Sort key words
-    dep.forEach(field => {
-      if (target[field]) {
-        target[field] = sortObject(target[field]);
-      }
-    });
-
-    this.fs.writeJSON(targetPath, target);
+  _parseGitRepository(gitUrl: string) {
+    const { gitRepository } = parseGitRepository(gitUrl);
+    this.props.gitRepository = gitRepository;
   }
 };
