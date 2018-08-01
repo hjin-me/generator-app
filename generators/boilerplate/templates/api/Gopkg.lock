@@ -3,22 +3,6 @@
 
 [[projects]]
   branch = "master"
-  name = "git.avlyun.org/inf/go-pkg"
-  packages = [
-    "logex",
-    "statics"
-  ]
-  revision = "d35bd384ace5d1daddd49866f449b8efa6fbedf6"
-  source = "https://git.avlyun.org/inf/go-pkg.git"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/gin-contrib/gzip"
-  packages = ["."]
-  revision = "4fbfcc6122759afed2efbc762c4c41164a403951"
-
-[[projects]]
-  branch = "master"
   name = "github.com/gin-contrib/sse"
   packages = ["."]
   revision = "22d885f9ecc78bf4ee5d72b937e4bbcdc58e8cae"
@@ -40,6 +24,12 @@
   version = "v1.1.0"
 
 [[projects]]
+  name = "github.com/hjin-me/generator-app"
+  packages = ["gin-static"]
+  revision = "3cc3e0cb7e78ebfdca8b8817b80f4f8d164363a4"
+  version = "1.0.3"
+
+[[projects]]
   name = "github.com/mattn/go-isatty"
   packages = ["."]
   revision = "0360b2af4f38e8d38c7fce2a9f4e702702d73a39"
@@ -55,7 +45,7 @@
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "e072cadbbdc8dd3d3ffa82b8b4b9304c261d9311"
+  revision = "bd9dbc187b6e1dacfdd2722a87e83093c2d7bd6e"
   source = "https://github.com/golang/sys.git"
 
 [[projects]]
@@ -73,6 +63,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "f147d27e37603e52eca25752f257a6d07485d1fb72a3e65f10489996d290e389"
+  inputs-digest = "63413bd5d7efd515628149beda179dfae2675068c9b7c80c4e547d68af34646b"
   solver-name = "gps-cdcl"
   solver-version = 1

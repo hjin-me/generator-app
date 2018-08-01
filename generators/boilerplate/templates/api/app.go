@@ -1,19 +1,18 @@
 package main
 
 import (
-	"git.avlyun.org/inf/go-pkg/statics"
-	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
-	"os"
+	"github.com/hjin-me/generator-app/gin-static"
 )
 
 func main() {
 	r := gin.Default()
-	r.Use(gzip.Gzip(gzip.BestCompression))
-	statics.ServerStatics(r)
-	if os.Getenv("GIN_MODE") == "release" {
-		r.Run(":8080") // listen and serve on 0.0.0.0:8443
-	} else {
-		r.Run("127.0.0.1:8080") // listen and serve on 0.0.0.0:8443
-	}
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
+	r.SetHTMLTemplate(static.TemplateEngine())
+	static.ServerStatics(r)
+	r.Run(":8787") // listen and serve on 0.0.0.0:8787
 }
