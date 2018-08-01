@@ -12,7 +12,6 @@ func main() {
 			"message": "pong",
 		})
 	})
-	r.SetHTMLTemplate(static.TemplateEngine())
 	static.ServerStatics(r)
 	r.Run(":8787") // listen and serve on 0.0.0.0:8787
 }

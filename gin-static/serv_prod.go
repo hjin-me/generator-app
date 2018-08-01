@@ -3,30 +3,38 @@
 package static
 
 import (
-	"github.com/gin-gonic/gin"
 	"os"
 	"path"
+
+	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"html/template"
-	"log"
+	"git.avlyun.org/inf/go-pkg/logex"
+	"net/http"
 )
 
-func ServerStatics(r *gin.Engine) {
-	projectName := os.Getenv("PROJECT_NAME")
-	r.StaticFile("/", path.Join("/var/www/static/", projectName, "index.html"))
-	r.Static("/static", "/var/www/static")
+func serveIndex( c *gin.Context){
+	c.HTML(http.StatusOK, "index", nil)
 }
 
-func TemplateEngine() *template.Template {
+func ServerStatics(r *gin.Engine) {
+	r.SetHTMLTemplate(templateEngine())
+	r.GET("/", serveIndex)
+	r.HEAD("/", serveIndex)
+	r.Static("/static", "/var/www/static")
+	r.NoRoute(serveIndex)
+}
+
+func templateEngine() *template.Template {
 	projectName := os.Getenv("PROJECT_NAME")
 	b, err := ioutil.ReadFile(path.Join("/var/www/static/", projectName, "index.html"))
 	if err != nil {
-		log.Fatalln("read index.html failed", err)
+		logex.Fatal("read index.html failed", err)
 		panic(err)
 	}
-	t, err := template.New("main").Parse(string(b))
+	t, err := template.New("index").Funcs(funcs).Parse(string(b))
 	if err != nil {
-		log.Fatalln("parse html failed", err)
+		logex.Fatal("parse html failed", err)
 		panic(err)
 	}
 	return t
